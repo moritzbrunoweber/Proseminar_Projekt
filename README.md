@@ -17,5 +17,3 @@ I want to have chosen a suitable area and obtained the raw data by session 8, ma
 
 ## Risks and contingency
 I expect especially the MODIS tree cover data to be quite large, which is why I will choose a suitably big area for my project. The finding of said area will likely not be very easy, but I will burn that bridge when i get to it. As I have little to no experience with spatial data in R, I suspect this to also challenge me quite a bit. I have prepared a little by going through the brief introduction to working with geospatial data in R last week and will continue to learn and inform myself, to master this task successfully.
-
-tree cover
