@@ -10,5 +10,12 @@ The Amazon rain forest plays a vital role in the earth's climate system and glob
 The result of my project will be a overview of an area in the Amazon rain forest which was subject to deforestation and relate that deforestation to measured changes in terrestrial water storage.
 
 ## Implementation
+I want to first make out a suitable area for my project by looking at mapped deforestation and afterwards obtain the GRACE/GRACE-FO data from GravIS and tree cover data from MODIS. I will need to mask the chosen area and to align the spatial resolution of the data prior to creating two graphics, displaying the change in tree cover and terrestrial water storage. As a final result I want to relate those two maps to each other in order to visualize the effect deforestation has on the terrestrial water storage.
+
+## Responsibilities and timeline
+I want to have chosen a suitable area and obtained the raw data by session 8, manipulated the data by session 10 and by session 12 be finished with my graphics and report.
+
+## Risks and contingency
+I expect especially the MODIS tree cover data to be quite large, which is why I will choose a suitably big area for my project. The finding of said area will likely not be very easy, but I will burn that bridge when i get to it. As I have little to no experience with spatial data in R, I suspect this to also challenge me quite a bit. I have prepared a little by going through the brief introduction to working with geospatial data in R last week and will continue to learn and inform myself, to master this task successfully.
 
 tree cover
