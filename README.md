@@ -25,4 +25,4 @@ Boergens, E., Dobslaw, H., Dill, R. (2025):
   V. 0001. GFZ Data Services. https://doi.org/10.5880/COST-G.GRAVIS_02_L3_TWS
 
 MODIS tree cover download:
-https://doi.org/10.5067/MODIS/MOD44B.006
+https://doi.org/10.5067/MODIS/MOD44B.061
