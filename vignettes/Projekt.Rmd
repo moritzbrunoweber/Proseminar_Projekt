@@ -1,0 +1,15 @@
+---
+title: "Projekt"
+output: html_document
+---
+
+```{r}
+install.packages("ncdf4")
+install.packages("terra")
+install.packages("here")
+library(ncdf4)
+library(terra)
+library(here)
+library(ggplot2)
+```
+
