@@ -43,7 +43,7 @@ Upper Right ( -49.9441074,   0.0000000) ( 49d56'38.79"W,  0d 0' 0.01"N)
 
 Lower Right ( -49.9441074,  -9.9386031) ( 49d56'38.79"W,  9d56'18.97"S)
 
-the proper granules can also be found via the field "granule search", the two data sets to be downloaded are:
+The proper granules can also be found via the field "granule search", the two data sets to be downloaded are:
 
 MOD44B.A2003065.h12v09.061.2022281001104
 MOD44B.A2024065.h12v09.061.2025133155809
