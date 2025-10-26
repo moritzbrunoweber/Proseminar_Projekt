@@ -4,12 +4,45 @@ output: html_document
 ---
 
 ```{r}
-install.packages("ncdf4")
-install.packages("terra")
-install.packages("here")
 library(ncdf4)
 library(terra)
 library(here)
 library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
 ```
 
+```{r}
+coords <- matrix(c(
+  -59.9329288,  0.0000000,   # Upper Left
+  -49.9441074,  0.0000000,   # Upper Right
+  -49.9441074, -9.9386031,   # Lower Right
+  -59.9329288, -9.9386031,   # Lower Left
+  -59.9329288,  0.0000000    # zurück zum Startpunkt
+), ncol = 2, byrow = TRUE)
+
+polygon_sf <- st_sf(
+  geometry = st_sfc(st_polygon(list(coords))),
+  crs = 4326
+)
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot() +
+  geom_sf(data = world, fill = "gray90", color = "gray50") +
+  geom_sf(data = polygon_sf, fill = "lightblue", color = "darkblue", alpha = 0.6, size = 1) +
+  coord_sf(
+    xlim = c(-80, -30),
+    ylim = c(-20, 15),
+    expand = FALSE
+  ) +
+  labs(
+    title = "Area of Interest",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  theme_minimal()
+
+
+```

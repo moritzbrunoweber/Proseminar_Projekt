@@ -10,7 +10,7 @@ The Amazon rain forest plays a vital role in the earth's climate system and glob
 The result of my project will be a overview of an area in the Amazon rain forest which was subject to deforestation and relate that deforestation to measured changes in terrestrial water storage.
 
 ## Implementation
-I want to first make out a suitable area for my project by looking at mapped deforestation and afterwards obtain the GRACE/GRACE-FO data from GravIS and tree cover data from MODIS. I will need to mask the chosen area and to align the spatial resolution of the data prior to creating two graphics, displaying the change in tree cover and terrestrial water storage. As a final result I want to relate those two maps to each other in order to visualize the effect deforestation has on the terrestrial water storage.
+I want to first make out a suitable area for my project by looking at mapped deforestation and afterwards obtain the GRACE/GRACE-FO data from GravIS and tree cover data from MODIS. I will need to mask the chosen area and to align the spatial resolution of the data prior to creating two graphics, displaying the change in tree cover and terrestrial water storage. As a final result I want to relate those two maps to each other in order to visualize the effect deforestation has on the terrestrial water storage. The analysis will be made for two temporal windows: March 2002 - March 2003 and March 2024 - March 2025.
 
 ## Responsibilities and timeline
 I want to have chosen a suitable area and obtained the raw data by session 8, manipulated the data by session 10 and by session 12 be finished with my graphics and report.
@@ -26,3 +26,24 @@ Boergens, E., Dobslaw, H., Dill, R. (2025):
 
 MODIS tree cover download:
 https://doi.org/10.5067/MODIS/MOD44B.061
+
+Both data sets are well above 100 MB, therefore they are not included in the repository and must be downloaded manually. In my project, they will be accessed by this path: "C:\Users\Moritz.weber\Desktop\lokale Dateien\Uni\HS2025\Proseminar_Applied_Geodata_Science\data_external"
+
+The GRACE-FO data has a monthly temporal resolution, ranging from April 2002 to the present. It is a global data set, so the area of interest will have to be cut out in later data processing.
+
+The MODIS data is a yearly average from March 2003 - March 2004 and from March 2024 - March 2025.The area of interest is as follows:
+
+Corner Coordinates:
+
+Upper Left  ( -59.9329288,   0.0000000) ( 59d55'58.54"W,  0d 0' 0.01"N)
+
+Lower Left  ( -59.9329288,  -9.9386031) ( 59d55'58.54"W,  9d56'18.97"S)
+
+Upper Right ( -49.9441074,   0.0000000) ( 49d56'38.79"W,  0d 0' 0.01"N)
+
+Lower Right ( -49.9441074,  -9.9386031) ( 49d56'38.79"W,  9d56'18.97"S)
+
+the proper granules can also be found via the field "granule search", the two data sets to be downloaded are:
+
+MOD44B.A2003065.h12v09.061.2022281001104
+MOD44B.A2024065.h12v09.061.2025133155809
