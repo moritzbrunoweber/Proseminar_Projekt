@@ -29,7 +29,7 @@ polygon_sf <- st_sf(
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
-ggplot() +
+fig_aoi <- ggplot() +
   geom_sf(data = world, fill = "gray90", color = "gray50") +
   geom_sf(data = polygon_sf, fill = "lightblue", color = "darkblue", alpha = 0.6, size = 1) +
   coord_sf(
@@ -44,5 +44,11 @@ ggplot() +
   ) +
   theme_minimal()
 
-
+ggsave(
+  filename = here("fig", "area_of_interest.png"),
+  plot = fig_aoi,
+  width = 8,
+  height = 6,
+  dpi = 300
+)
 ```
