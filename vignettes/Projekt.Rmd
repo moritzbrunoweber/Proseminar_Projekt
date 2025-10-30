@@ -13,6 +13,8 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 ```
 
+## Area of Interest
+
 ```{r}
 coords <- matrix(c(
   -59.9329288,  0.0000000,   # Upper Left
@@ -52,3 +54,109 @@ ggsave(
   dpi = 300
 )
 ```
+
+## Data Processing TWS
+
+```{r}
+# Define path
+file_path <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/GRAVIS-3_COSTG_0200_TWS_GRID_GFZ_0001.nc"
+
+tws <- nc_open(file_path)
+
+structure(tws)
+
+# extract time
+time_vals <- ncvar_get(tws, "time")
+
+# Attribute der Zeitvariable holen
+time_units <- ncatt_get(tws, "time", "units")$value
+calendar <- ncatt_get(tws, "time", "calendar")$value
+
+# Ausgabe prüfen
+time_units
+calendar
+head(time_vals)
+
+# Basiszeitpunkt aus den Attributen
+origin <- as.POSIXct("2002-04-18 00:00:00", tz = "UTC")
+
+# Zeitwerte (in Tagen) zu Datum umrechnen
+time_dates <- origin + time_vals * 86400  # 86400 Sekunden pro Tag
+
+# Kontrolle
+head(time_dates)
+tail(time_dates)
+
+# Zeitraum definieren 2003-2004
+start_date1 <- as.POSIXct("2003-03-01", tz = "UTC")
+end_date1   <- as.POSIXct("2004-03-31", tz = "UTC")
+
+# Index der gewünschten Zeitstufen finden
+sel_idx1 <- which(time_dates >= start_date1 & time_dates <= end_date1)
+
+# Kontrolle: welche Zeitstufen sind das?
+time_dates[sel_idx1]
+
+# Zeitraum definieren 2024-2025
+start_date2 <- as.POSIXct("2024-03-01", tz = "UTC")
+end_date2   <- as.POSIXct("2025-03-31", tz = "UTC")
+
+# Index der gewünschten Zeitstufen finden
+sel_idx2 <- which(time_dates >= start_date2 & time_dates <= end_date2)
+
+# Kontrolle: welche Zeitstufen sind das?
+time_dates[sel_idx2]
+
+
+# Alle Zeitstufen laden (nur tws)
+tws_rast <- rast(file_path)
+
+# Subset für March 2003 – March 2004
+tws1 <- tws_rast[[sel_idx1]]
+
+# Zeitinformationen hinzufügen
+time(tws1) <- time_dates[sel_idx1]
+
+# Kontrolle
+tws1
+
+# Subset für March 2024 – March 2025
+tws2 <- tws_rast[[sel_idx2]]
+
+# Zeitinformationen hinzufügen
+time(tws2) <- time_dates[sel_idx2]
+
+# Kontrolle
+tws2
+
+tws1_mean <- mean(tws1, na.rm = TRUE)
+
+plot(tws1_mean, main = "Mean TWS (Mar 2003 – Mar 2004)")
+
+tws2_mean <- mean(tws2, na.rm = TRUE)
+
+plot(tws2_mean, main = "Mean TWS (Mar 2024 – Mar 2025)")
+
+# Polygon original: -60 bis -50
+polygon_sf_360 <- st_geometry(polygon_sf) %>% 
+  st_shift_longitude() %>%  # transformiert -180:180 -> 0:360
+  st_sf(crs = st_crs(polygon_sf))
+
+# Als SpatVector für terra
+polygon_vect_360 <- vect(polygon_sf_360)
+
+# Crop und Mask
+tws1_aoi <- mask(crop(tws1_mean, polygon_vect_360), polygon_vect_360)
+
+# Plot
+plot(tws1_aoi, main = "Mean TWS (March 2003 – March 2004) – AOI", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf_360), add = TRUE, border = "red", lwd = 2)
+
+# Crop und Mask
+tws2_aoi <- mask(crop(tws2_mean, polygon_vect_360), polygon_vect_360)
+
+# Plot
+plot(tws2_aoi, main = "Mean TWS (March 2024 – March 2025) – AOI", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf_360), add = TRUE, border = "red", lwd = 2)
+```
+

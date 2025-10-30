@@ -27,7 +27,7 @@ Boergens, E., Dobslaw, H., Dill, R. (2025):
 MODIS tree cover download:
 https://doi.org/10.5067/MODIS/MOD44B.061
 
-Both data sets are well above 100 MB, therefore they are not included in the repository and must be downloaded manually. In my project, they will be accessed by this path: "C:\Users\Moritz.weber\Desktop\lokale Dateien\Uni\HS2025\Proseminar_Applied_Geodata_Science\data_external"
+Both data sets are well above 100 MB, therefore they are not included in the repository and must be downloaded manually. In my project, they will be accessed by this path: "C:\Users\Moritz.weber\Desktop\lokale Dateien\Uni\HS2025\Proseminar_Applied_Geodata_Science\data_external" - it will need to be replaced only at the beginning of the code for each file, as I will save the file path to the variable "file_path" for easier handling.
 
 The GRACE-FO data has a monthly temporal resolution, ranging from April 2002 to the present. It is a global data set, so the area of interest will have to be cut out in later data processing.
 
