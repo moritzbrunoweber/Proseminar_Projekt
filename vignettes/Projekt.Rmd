@@ -17,11 +17,11 @@ library(rnaturalearthdata)
 
 ```{r}
 coords <- matrix(c(
-  -59.9329288,  0.0000000,   # Upper Left
-  -49.9441074,  0.0000000,   # Upper Right
-  -49.9441074, -9.9386031,   # Lower Right
-  -59.9329288, -9.9386031,   # Lower Left
-  -59.9329288,  0.0000000    # zurück zum Startpunkt
+  -77.0000000,  6.0000000,   # Upper Left
+  -48.0000000,  6.0000000,   # Upper Right
+  -48.0000000, -18.0000000,   # Lower Right
+  -77.0000000, -18.0000000,   # Lower Left
+  -77.0000000,  6.0000000    # zurück zum Startpunkt
 ), ncol = 2, byrow = TRUE)
 
 polygon_sf <- st_sf(
@@ -137,26 +137,38 @@ tws2_mean <- mean(tws2, na.rm = TRUE)
 
 plot(tws2_mean, main = "Mean TWS (Mar 2024 – Mar 2025)")
 
-# Polygon original: -60 bis -50
-polygon_sf_360 <- st_geometry(polygon_sf) %>% 
-  st_shift_longitude() %>%  # transformiert -180:180 -> 0:360
-  st_sf(crs = st_crs(polygon_sf))
+# GRACE-Daten: von 0–360° auf -180–180° verschieben
+tws1_mean_180 <- terra::rotate(tws1_mean)
+tws2_mean_180 <- terra::rotate(tws2_mean)
 
-# Als SpatVector für terra
-polygon_vect_360 <- vect(polygon_sf_360)
+# Kontrolle der neuen Extents
+ext(tws1_mean_180)
+ext(tws2_mean_180)
 
-# Crop und Mask
-tws1_aoi <- mask(crop(tws1_mean, polygon_vect_360), polygon_vect_360)
+# Polygon bleibt unverändert
+polygon_vect <- vect(polygon_sf)
 
-# Plot
-plot(tws1_aoi, main = "Mean TWS (March 2003 – March 2004) – AOI", col = viridis::viridis(100))
-plot(st_geometry(polygon_sf_360), add = TRUE, border = "red", lwd = 2)
+# Crop und Mask mit transformierten Daten
+tws1_aoi <- mask(crop(tws1_mean_180, polygon_vect), polygon_vect)
+tws2_aoi <- mask(crop(tws2_mean_180, polygon_vect), polygon_vect)
 
-# Crop und Mask
-tws2_aoi <- mask(crop(tws2_mean, polygon_vect_360), polygon_vect_360)
+# Plotten
+plot(tws1_aoi, main = "Mean TWS (Mar 2003 – Mar 2004) – AOI", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
-# Plot
-plot(tws2_aoi, main = "Mean TWS (March 2024 – March 2025) – AOI", col = viridis::viridis(100))
-plot(st_geometry(polygon_sf_360), add = TRUE, border = "red", lwd = 2)
+plot(tws2_aoi, main = "Mean TWS (Mar 2024 – Mar 2025) – AOI", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+
+# Zeitreihe erstellen für Maxima und Minima
+```
+
+```{r}
+# Data processing tree cover
+
+file_path_m1 <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/tree_cover_new/2000"
+file_path_m2 <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/tree_cover_new/2024"
+
+
 ```
 
