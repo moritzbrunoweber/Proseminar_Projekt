@@ -211,38 +211,3 @@ tree_2024 <- process_MOD44B_treecover(file_path_m2, polygon_vect, "MOD44B_TreeCo
 
 ```
 
-
-```{r}
-library(terra)
-
-# === Pfad zu deinen MOD44B HDF-Dateien ===
-pfad <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/tree_cover_new/2000"
-
-# === Alle .hdf-Dateien auflisten ===
-hdf_files <- list.files(pfad, pattern = "\\.hdf$", full.names = TRUE)
-
-# === Tree Cover Layer (Percent_Tree_Cover) laden ===
-tree_rasters <- lapply(hdf_files, function(f) {
-  sds_path <- sprintf('HDF4_EOS:EOS_GRID:"%s":MOD44B_250m_GRID:Percent_Tree_Cover', f)
-  rast(sds_path)
-})
-
-# === Mosaik erstellen ===
-mosaic_tree <- do.call(mosaic, tree_rasters)
-
-# === CRS prüfen und AOI ggf. reprojizieren ===
-if (!identical(crs(mosaic_tree), crs(polygon_vect))) {
-  polygon_vect <- project(polygon_vect, crs(mosaic_tree))
-}
-
-# === Zuschneiden und maskieren ===
-tree_crop <- crop(mosaic_tree, polygon_vect)
-tree_masked <- mask(tree_crop, polygon_vect)
-
-# === Plot und speichern ===
-plot(tree_masked, main = "MOD44B Tree Cover (AOI)")
-writeRaster(tree_masked, "MOD44B_TreeCover_AOI.tif", overwrite = TRUE)
-
-
-```
-
