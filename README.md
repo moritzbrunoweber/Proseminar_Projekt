@@ -4,13 +4,16 @@
 The GRACE/GRACE-FO satellites, maintained by GravIS, monitor gravitational changes over the entire planet. GravIS provides information about terrestrial water storage anomalies (GravIS TWS Level-3 products), which display water mass anomalies expressed in terms of equivalent water height from all water storage compartments including snow, surface water, soil moisture, and deep groundwater relative to the long term mean period 2002/04 through 2020/03. I want to see, if these changes relate to areas of deforestation in the Amazon rain forest.
 
 ## Background and motivation
-The Amazon rain forest plays a vital role in the earth's climate system and global water cycle. It acts as a big carbon sink and contributes significantly to regional and global precipitation patterns through evapotranspiration. However, widespread deforestation driven by agriculture, logging, and urbanization threatens the Amazon rain forest. Changes in forest cover can disrupt water storage and availability, affecting surface water, soil moisture, and groundwater dynamics. By analyzing terrestrial water storage anomalies from GRACE/GRACE-FO data in relation to deforestation areas, I want to see the impact deforestation has on the terrestrial water storage, which helps understanding the difficulties we will need to overcome.
+The Amazon rain forest plays a vital role in the earth's climate system and global water cycle. It acts as a big carbon sink and contributes significantly to regional and global precipitation patterns through evapotranspiration. However, widespread deforestation driven by agriculture, logging, and urbanization threaten the Amazon rain forest. Changes in forest cover can disrupt water storage and availability, affecting surface water, soil moisture, and groundwater dynamics. By analyzing terrestrial water storage anomalies from GRACE/GRACE-FO data in relation to deforestation areas, I want to see the impact deforestation has on the terrestrial water storage, which helps understanding the difficulties we will need to overcome. 
 
 ## Objective
-The result of my project will be a overview of an area in the Amazon rain forest which was subject to deforestation and relate that deforestation to measured changes in terrestrial water storage.
+The result of my project will be a overview of the Amazon rain forest, which will depict the change of tree cover due to deforestation. I will relate this change to the change in the yearly amplitude of terrestrial ground water storage for the same area to see a possible correlation between the two. 
 
 ## Implementation
-I want to first make out a suitable area for my project by looking at mapped deforestation and afterwards obtain the GRACE/GRACE-FO data from GravIS and tree cover data from MODIS. I will need to mask the chosen area and to align the spatial resolution of the data prior to creating two graphics, displaying the change in tree cover and terrestrial water storage. As a final result I want to relate those two maps to each other in order to visualize the effect deforestation has on the terrestrial water storage. The analysis will be made for two temporal windows: March 2002 - March 2003 and March 2024 - March 2025.
+I will acquire the tree cover data from MODIS and the TWS data from GravIS. The MODIS tree cover data will need to be mosaiced together to cover my area of interest and the GravIS TWS data will need to be masked by the area of interest. Furthermore, I will need to align the saptial resolution of the two data sets, as the MODIS tree cover data has a spatial resolution of 250 meters and the GravIS TWS data of about 300 kilometers. I will estimate he change of tree cover by comparing the earliest and latest available data (March 2000 - March 2001 and March 2024 - March 2025) and relating the change in tree cover to the linear regression made with the time series of the yearly TWS amplitude, ranging from the earliest to the latest available data (April 2002 - May 2025).
+
+## Addendum
+
 
 ## Responsibilities and timeline
 I want to have chosen a suitable area and obtained the raw data by session 8, manipulated the data by session 10 and by session 12 be finished with my graphics and report.
@@ -27,7 +30,7 @@ Boergens, E., Dobslaw, H., Dill, R. (2025):
 MODIS tree cover download:
 https://doi.org/10.5067/MODIS/MOD44B.061
 
-Both data sets are well above 100 MB, therefore they are not included in the repository and must be downloaded manually. In my project, they will be accessed by this path: "C:\Users\Moritz.weber\Desktop\lokale Dateien\Uni\HS2025\Proseminar_Applied_Geodata_Science\data_external" - it will need to be replaced only at the beginning of the code for each file, as I will save the file path to the variable "file_path" for easier handling.
+Both data sets are well above 100 MB, therefore they are not included in the repository and must be downloaded manually. In my project, they will be accessed via local paths which will need to be replaced only at the very beginning of the code, as I will save the file path to a variable for easier handling.
 
 The GRACE-FO data has a monthly temporal resolution, ranging from April 2002 to the present. It is a global data set, so the area of interest will have to be cut out in later data processing.
 
