@@ -139,6 +139,9 @@ plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
 
 # Zeitreihe erstellen für Maxima und Minima
+
+
+
 ```
 
 ## Data processing tree cover
@@ -164,17 +167,28 @@ process_MOD44B_treecover <- function(hdf_folder, aoi, output_file) {
   tree_masked <- mask(tree_crop, aoi)
   
   plot(tree_masked, main = paste("MOD44B Tree Cover -", output_file))
-  writeRaster(tree_masked, output_file, overwrite = TRUE)
+ # writeRaster(tree_masked, output_file, overwrite = TRUE)
   
   return(tree_masked)
 }
 
 # Tree Cover für 2000
 tree_2000 <- process_MOD44B_treecover(file_path_m1, polygon_vect, "MOD44B_TreeCover_2000_AOI.tif")
+tree_2000[tree_2000 == 200] <- NA
 
 # Tree Cover für 2024
 tree_2024 <- process_MOD44B_treecover(file_path_m2, polygon_vect, "MOD44B_TreeCover_2024_AOI.tif")
+tree_2024[tree_2024 == 200] <- NA
 
+tree_cover_change <- tree_2024 - tree_2000
+
+# plot(tree_cover_change, main = "tree_cover_change")
+
+# adapt spatial resolution
+tree_cover_change <- project(tree_cover_change, tws1_aoi)
+
+tree_cover_change_resampled <- resample(tree_cover_change, tws1_aoi, method = "average")
+plot(tree_cover_change_resampled, main = "tree_cover_change_resampled")
 
 ```
 
