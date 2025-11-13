@@ -145,8 +145,6 @@ years <- format(time(tws_rast), "%Y")
 unique_years <- sort(unique(as.numeric(years)))
 time(annual_amp) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
 
-
-# Amplitude: max - min pro Jahr (Pixelweise)
 annual_amp <- tapp(tws_rast, years, fun = function(x) {
   if (all(is.na(x))) {
     return(NA)
