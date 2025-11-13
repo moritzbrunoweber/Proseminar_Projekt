@@ -11,6 +11,7 @@ library(ggplot2)
 library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
+library(dplyr)
 
 # define file paths
 file_path <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/GRAVIS-3_COSTG_0200_TWS_GRID_GFZ_0001.nc"    #insert path to tws-data
@@ -138,10 +139,28 @@ plot(tws2_aoi, main = "Mean TWS (Mar 2024 – Mar 2025) – AOI", col = viridis:
 plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
 
-# Zeitreihe erstellen für Maxima und Minima
+# Zeitreihe erstellen für Amplitude
+
+years <- format(time(tws_rast), "%Y")
+unique_years <- sort(unique(as.numeric(years)))
+time(annual_amp) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
 
 
+# Amplitude: max - min pro Jahr (Pixelweise)
+annual_amp <- tapp(tws_rast, years, fun = function(x) {
+  if (all(is.na(x))) {
+    return(NA)
+  } else {
+    return(max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  }
+})
 
+annual_amp <- terra::rotate(annual_amp)
+ext(annual_amp)
+
+annual_amp_aoi <- mask(crop(annual_amp, polygon_vect), polygon_vect)
+
+plot(annual_amp_aoi)
 ```
 
 ## Data processing tree cover
