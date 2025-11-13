@@ -208,4 +208,9 @@ tree_cover_change_resampled <- resample(tree_cover_change, tws1_aoi, method = "a
 plot(tree_cover_change_resampled, main = "tree_cover_change_resampled")
 
 ```
+```{r}
+# lineare Regression für jeden Pixel der Zeitreihe >> stimmt Regressionskoeffizient mit change in treecover überein?
+
+
+```
 
