@@ -55,7 +55,7 @@ fig_aoi <- ggplot() +
 ggsave(
   filename = here("fig", "area_of_interest.png"),
   plot = fig_aoi,
-  width = 8,
+  width = 9,
   height = 6,
   dpi = 300
 )
@@ -159,6 +159,19 @@ ext(annual_amp)
 annual_amp_aoi <- mask(crop(annual_amp, polygon_vect), polygon_vect)
 
 plot(annual_amp_aoi)
+t <- as.numeric(format(time(annual_amp), "%Y"))
+pixel_lm <- function(y) {
+  if (all(is.na(y))) return(NA)
+
+  model <- lm(y ~ t)
+  return(coef(model)[2])  # Steigung = Trend pro Jahr
+}
+trend_raster <- app(annual_amp, pixel_lm)
+trend_aoi <- mask(crop(trend_raster, polygon_vect), polygon_vect)
+plot(trend_aoi, main = "Trend der Jahres-Amplitude (Steigung pro Jahr)",
+     col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
 ```
 
 ## Data processing tree cover
@@ -207,24 +220,24 @@ tree_cover_change <- project(tree_cover_change, tws1_aoi)
 tree_cover_change_resampled <- resample(tree_cover_change, tws1_aoi, method = "average")
 plot(tree_cover_change_resampled, main = "tree_cover_change_resampled")
 
+png(
+  filename = here::here("fig", "tree_cover_change_resampled.png"),
+  width = 2000,
+  height = 1500,
+  res = 300
+)
+
+plot(
+  tree_cover_change_resampled,
+  main = "Tree Cover Change (resampled)"
+)
+
+dev.off()
+
 ```
 ## Correlation tree cover change & change in yearly TWS amplitude
 
 ```{r}
-t <- as.numeric(format(time(annual_amp), "%Y"))
-pixel_lm <- function(y) {
-  if (all(is.na(y))) return(NA)
-
-  model <- lm(y ~ t)
-  return(coef(model)[2])  # Steigung = Trend pro Jahr
-}
-trend_raster <- app(annual_amp, pixel_lm)
-trend_aoi <- mask(crop(trend_raster, polygon_vect), polygon_vect)
-plot(trend_aoi, main = "Trend der Jahres-Amplitude (Steigung pro Jahr)",
-     col = viridis::viridis(100))
-plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
-
-
 # Korrelation
 trend_map  <- trend_aoi
 tree_map   <- mask(crop(tree_cover_change_resampled, polygon_vect), polygon_vect)
