@@ -172,6 +172,19 @@ plot(trend_aoi, main = "Trend der Jahres-Amplitude (Steigung pro Jahr)",
      col = viridis::viridis(100))
 plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
+png(
+  filename = here::here("fig", "trend_tws.png"),
+  width = 2000,
+  height = 1500,
+  res = 300
+)
+
+plot(
+  trend_aoi,
+  main = "Yearly Trend in change of TWS Amplitude"
+)
+
+dev.off()
 ```
 
 ## Data processing tree cover
@@ -259,11 +272,20 @@ correlation_result
 lm_model <- lm(trend ~ tree, data = as.data.frame(vals))
 summary(lm_model)
 
+png(
+  filename = here::here("fig", "scatter_trend_vs_treecover.png"),
+  width = 2000,
+  height = 1500,
+  res = 200
+)
+
 plot(vals[, "tree"], vals[, "trend"],
-     xlab = "Tree cover change (2002–2024)",
-     ylab = "TWS amplitude trend (per year)",
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude trend (yearly)",
      main = "Spatial correlation: TWS trend vs. Tree cover change")
+
 abline(lm_model, col = "red", lwd = 2)
 
+dev.off()
 
 ```

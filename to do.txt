@@ -1,0 +1,8 @@
+grosse code blocks unterspeichern in analyse >> mit aufbereiteten daten im Rmd arbeiten, dieser soll relativ schnell laden
+
+Korrelation jetzt: Amplitude zu tree Change
+spannend >> minima und maxima anschauen, trend in diesen?
+
+Erklärung: schwammstadt, mehr waldfläche kann mehr wasser speichern während Regenzeit >> frage: wenn Amplitude bei weniger tree cover kleiner wird, ist es nur wegen den maxima, die runterkommen oder auch wegen den minima? 
+
+in scatter plot Unsicherheit anzeigen!!
