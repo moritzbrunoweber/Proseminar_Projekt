@@ -141,10 +141,6 @@ plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
 # Zeitreihe erstellen für Amplitude
 
-years <- format(time(tws_rast), "%Y")
-unique_years <- sort(unique(as.numeric(years)))
-time(annual_amp) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
-
 annual_amp <- tapp(tws_rast, years, fun = function(x) {
   if (all(is.na(x))) {
     return(NA)
@@ -152,6 +148,10 @@ annual_amp <- tapp(tws_rast, years, fun = function(x) {
     return(max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
   }
 })
+
+years <- format(time(tws_rast), "%Y")
+unique_years <- sort(unique(as.numeric(years)))
+time(annual_amp) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
 
 annual_amp <- terra::rotate(annual_amp)
 ext(annual_amp)
@@ -210,6 +210,47 @@ plot(tree_cover_change_resampled, main = "tree_cover_change_resampled")
 ```
 ```{r}
 # lineare Regression für jeden Pixel der Zeitreihe >> stimmt Regressionskoeffizient mit change in treecover überein?
+
+t <- as.numeric(format(time(annual_amp), "%Y"))
+pixel_lm <- function(y) {
+  if (all(is.na(y))) return(NA)
+
+  model <- lm(y ~ t)
+  return(coef(model)[2])  # Steigung = Trend pro Jahr
+}
+trend_raster <- app(annual_amp, pixel_lm)
+trend_aoi <- mask(crop(trend_raster, polygon_vect), polygon_vect)
+plot(trend_aoi, main = "Trend der Jahres-Amplitude (Steigung pro Jahr)",
+     col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+
+# Korrelation
+trend_map  <- trend_aoi
+tree_map   <- mask(crop(tree_cover_change_resampled, polygon_vect), polygon_vect)
+
+tree_map_resampled <- terra::resample(tree_map, trend_map)
+
+vals <- cbind(
+  trend = values(trend_map),
+  tree  = values(tree_map_resampled)
+)
+
+vals <- vals[complete.cases(vals), ]
+colnames(vals) <- c("trend", "tree")
+
+
+correlation_result <- cor(vals[, "trend"], vals[, "tree"], method = "pearson")
+correlation_result
+
+lm_model <- lm(trend ~ tree, data = as.data.frame(vals))
+summary(lm_model)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2002–2024)",
+     ylab = "TWS amplitude trend (per year)",
+     main = "Spatial correlation: TWS trend vs. Tree cover change")
+abline(lm_model, col = "red", lwd = 2)
 
 
 ```
