@@ -141,6 +141,7 @@ plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
 # Zeitreihe erstellen für Amplitude
 
+years <- format(time(tws_rast), "%Y")
 annual_amp <- tapp(tws_rast, years, fun = function(x) {
   if (all(is.na(x))) {
     return(NA)
@@ -149,7 +150,6 @@ annual_amp <- tapp(tws_rast, years, fun = function(x) {
   }
 })
 
-years <- format(time(tws_rast), "%Y")
 unique_years <- sort(unique(as.numeric(years)))
 time(annual_amp) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
 
