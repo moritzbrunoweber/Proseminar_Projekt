@@ -208,9 +208,9 @@ tree_cover_change_resampled <- resample(tree_cover_change, tws1_aoi, method = "a
 plot(tree_cover_change_resampled, main = "tree_cover_change_resampled")
 
 ```
-```{r}
-# lineare Regression für jeden Pixel der Zeitreihe >> stimmt Regressionskoeffizient mit change in treecover überein?
+## Correlation tree cover change & change in yearly TWS amplitude
 
+```{r}
 t <- as.numeric(format(time(annual_amp), "%Y"))
 pixel_lm <- function(y) {
   if (all(is.na(y))) return(NA)
@@ -254,4 +254,3 @@ abline(lm_model, col = "red", lwd = 2)
 
 
 ```
-
