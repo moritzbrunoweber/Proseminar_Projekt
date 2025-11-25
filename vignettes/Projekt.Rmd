@@ -185,6 +185,43 @@ plot(
 )
 
 dev.off()
+
+# Zeitreihe erstellen für Maxima/Minima
+
+years <- format(time(tws_rast), "%Y")
+
+annual_max <- tapp(tws_rast, years, fun = function(x) {
+  if (all(is.na(x))) {
+    return(NA)
+  } else {
+    return(max(x, na.rm = TRUE))
+  }
+})
+
+annual_min <- tapp(tws_rast, years, fun = function(x) {
+  if (all(is.na(x))) {
+    return(NA)
+  } else {
+    return(min(x, na.rm = TRUE))
+  }
+})
+
+unique_years <- sort(unique(as.numeric(years)))
+time(annual_max) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
+time(annual_min) <- as.POSIXct(paste0(unique_years, "-07-01"), tz = "UTC")
+
+annual_max  <- terra::rotate(annual_max)
+annual_min  <- terra::rotate(annual_min)
+
+annual_max_aoi <- mask(crop(annual_max, polygon_vect), polygon_vect)
+annual_min_aoi <- mask(crop(annual_min, polygon_vect), polygon_vect)
+
+plot(annual_max_aoi, main = "Annual Maximum TWS", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+plot(annual_min_aoi, main = "Annual Minimum TWS", col = viridis::viridis(100))
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
 ```
 
 ## Data processing tree cover
@@ -359,3 +396,4 @@ lines(tree_sorted, fit_sorted, col = "red", lwd = 2)
 dev.off()
 
 ```
+## Correlation tree cover change & change in yearly maxima/minima of TWS amplitude
