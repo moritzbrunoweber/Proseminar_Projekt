@@ -222,6 +222,22 @@ plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 plot(annual_min_aoi, main = "Annual Minimum TWS", col = viridis::viridis(100))
 plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
+t <- as.numeric(unique_years)
+
+pixel_lm_trend <- function(y) {
+  if (all(is.na(y))) return(NA)
+  model <- lm(y ~ t)
+  return(coef(model)[2])   # Steigung pro Jahr
+}
+
+max_trend  <- app(annual_max, pixel_lm_trend)
+min_trend  <- app(annual_min, pixel_lm_trend)
+
+max_trend_aoi <- mask(crop(max_trend, polygon_vect), polygon_vect)
+min_trend_aoi <- mask(crop(min_trend, polygon_vect), polygon_vect)
+
+plot(max_trend_aoi, main = "Trend der jährlichen Maxima", col = viridis::viridis(100))
+plot(min_trend_aoi, main = "Trend der jährlichen Minima", col = viridis::viridis(100))
 ```
 
 ## Data processing tree cover
