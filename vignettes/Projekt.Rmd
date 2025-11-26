@@ -304,7 +304,9 @@ dev.off()
 ## Correlation tree cover change & change in yearly TWS amplitude
 
 ```{r}
+
 # Korrelation
+
 trend_map  <- trend_aoi
 tree_map   <- mask(crop(tree_cover_change_resampled, polygon_vect), polygon_vect)
 
@@ -318,18 +320,13 @@ vals <- cbind(
 vals <- vals[complete.cases(vals), ]
 colnames(vals) <- c("trend", "tree")
 
-
 correlation_result <- cor(vals[, "trend"], vals[, "tree"], method = "pearson")
-correlation_result
-
 lm_model <- lm(trend ~ tree, data = as.data.frame(vals))
-summary(lm_model)
+lm_sum <- summary(lm_model)
 
 png(
   filename = here::here("fig", "scatter_trend_vs_treecover.png"),
-  width = 2000,
-  height = 1500,
-  res = 200
+  width = 2000, height = 1500, res = 200
 )
 
 plot(vals[, "tree"], vals[, "trend"],
@@ -339,27 +336,36 @@ plot(vals[, "tree"], vals[, "trend"],
 
 abline(lm_model, col = "red", lwd = 2)
 
-dev.off()
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
 
-# mit Confidence Interval 95%
+dev.off()
 
 pred <- predict(lm_model, interval = "confidence")
 
+ord <- order(vals[, "tree"])
+tree_sorted <- vals[ord, "tree"]
+pred_sorted <- pred[ord, ]
+
 png(
   filename = here::here("fig", "scatter_trend_vs_treecover_95confidence.png"),
-  width = 2000,
-  height = 1500,
-  res = 200
+  width = 2000, height = 1500, res = 200
 )
 
 plot(vals[, "tree"], vals[, "trend"],
      xlab = "Tree cover change (2000–2024)",
      ylab = "TWS amplitude trend (yearly)",
-     main = "Spatial correlation: TWS trend vs. Tree cover change")
-
-ord <- order(vals[, "tree"])
-tree_sorted <- vals[ord, "tree"]
-pred_sorted <- pred[ord, ]
+     main = "Spatial correlation: TWS trend vs. Tree cover change (95% CI)")
 
 polygon(
   x = c(tree_sorted, rev(tree_sorted)),
@@ -370,14 +376,25 @@ polygon(
 
 lines(tree_sorted, pred_sorted[, "fit"], col = "red", lwd = 2)
 
-dev.off()
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
 
-# mit Standardfehlerband
+dev.off()
 
 pred_se <- predict(lm_model, se.fit = TRUE)
 
 fit <- pred_se$fit
-se  <- pred_se$se.fit
+se <- pred_se$se.fit
 
 upper <- fit + se
 lower <- fit - se
@@ -390,9 +407,7 @@ lower_sorted <- lower[ord]
 
 png(
   filename = here::here("fig", "scatter_trend_vs_treecover_SEband.png"),
-  width = 2000,
-  height = 1500,
-  res = 200
+  width = 2000, height = 1500, res = 200
 )
 
 plot(vals[, "tree"], vals[, "trend"],
@@ -409,7 +424,291 @@ polygon(
 
 lines(tree_sorted, fit_sorted, col = "red", lwd = 2)
 
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
 dev.off()
 
 ```
 ## Correlation tree cover change & change in yearly maxima/minima of TWS amplitude
+
+```{r}
+# Korrelation
+
+trend_map  <- max_trend_aoi
+tree_map   <- mask(crop(tree_cover_change_resampled, polygon_vect), polygon_vect)
+
+tree_map_resampled <- terra::resample(tree_map, trend_map)
+
+vals <- cbind(
+  trend = values(trend_map),
+  tree  = values(tree_map_resampled)
+)
+
+vals <- vals[complete.cases(vals), ]
+colnames(vals) <- c("trend", "tree")
+
+correlation_result <- cor(vals[, "trend"], vals[, "tree"], method = "pearson")
+lm_model <- lm(trend ~ tree, data = as.data.frame(vals))
+lm_sum <- summary(lm_model)
+
+png(
+  filename = here::here("fig", "scatter_maxtrend_vs_treecover.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude max-trend (yearly)",
+     main = "Spatial correlation: TWS max-trend vs. Tree cover change")
+
+abline(lm_model, col = "red", lwd = 2)
+
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+pred <- predict(lm_model, interval = "confidence")
+
+ord <- order(vals[, "tree"])
+tree_sorted <- vals[ord, "tree"]
+pred_sorted <- pred[ord, ]
+
+png(
+  filename = here::here("fig", "scatter_maxtrend_vs_treecover_95confidence.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude max-trend (yearly)",
+     main = "Spatial correlation: TWS max-trend vs. Tree cover change (95% CI)")
+
+polygon(
+  x = c(tree_sorted, rev(tree_sorted)),
+  y = c(pred_sorted[, "lwr"], rev(pred_sorted[, "upr"])),
+  col = adjustcolor("red", alpha.f = 0.2),
+  border = NA
+)
+
+lines(tree_sorted, pred_sorted[, "fit"], col = "red", lwd = 2)
+
+# Statistik-Overlay
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+pred_se <- predict(lm_model, se.fit = TRUE)
+
+fit <- pred_se$fit
+se <- pred_se$se.fit
+
+upper <- fit + se
+lower <- fit - se
+
+ord <- order(vals[, "tree"])
+tree_sorted  <- vals[ord, "tree"]
+fit_sorted   <- fit[ord]
+upper_sorted <- upper[ord]
+lower_sorted <- lower[ord]
+
+png(
+  filename = here::here("fig", "scatter_maxtrend_vs_treecover_SEband.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude max-trend (yearly)",
+     main = "TWS max-trend vs. Tree cover change (Standardfehlerband)")
+
+polygon(
+  x = c(tree_sorted, rev(tree_sorted)),
+  y = c(lower_sorted, rev(upper_sorted)),
+  col = adjustcolor("red", alpha.f = 0.2),
+  border = NA
+)
+
+lines(tree_sorted, fit_sorted, col = "red", lwd = 2)
+
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+trend_map  <- min_trend_aoi
+tree_map   <- mask(crop(tree_cover_change_resampled, polygon_vect), polygon_vect)
+
+tree_map_resampled <- terra::resample(tree_map, trend_map)
+
+vals <- cbind(
+  trend = values(trend_map),
+  tree  = values(tree_map_resampled)
+)
+
+vals <- vals[complete.cases(vals), ]
+colnames(vals) <- c("trend", "tree")
+
+correlation_result <- cor(vals[, "trend"], vals[, "tree"], method = "pearson")
+lm_model <- lm(trend ~ tree, data = as.data.frame(vals))
+lm_sum <- summary(lm_model)
+
+png(
+  filename = here::here("fig", "scatter_mintrend_vs_treecover.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude min-trend (yearly)",
+     main = "Spatial correlation: TWS min-trend vs. Tree cover change")
+
+abline(lm_model, col = "red", lwd = 2)
+
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+pred <- predict(lm_model, interval = "confidence")
+
+ord <- order(vals[, "tree"])
+tree_sorted <- vals[ord, "tree"]
+pred_sorted <- pred[ord, ]
+
+png(
+  filename = here::here("fig", "scatter_mintrend_vs_treecover_95confidence.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude min-trend (yearly)",
+     main = "Spatial correlation: TWS min-trend vs. Tree cover change (95% CI)")
+
+polygon(
+  x = c(tree_sorted, rev(tree_sorted)),
+  y = c(pred_sorted[, "lwr"], rev(pred_sorted[, "upr"])),
+  col = adjustcolor("red", alpha.f = 0.2),
+  border = NA
+)
+
+lines(tree_sorted, pred_sorted[, "fit"], col = "red", lwd = 2)
+
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+pred_se <- predict(lm_model, se.fit = TRUE)
+
+fit <- pred_se$fit
+se <- pred_se$se.fit
+
+upper <- fit + se
+lower <- fit - se
+
+ord <- order(vals[, "tree"])
+tree_sorted  <- vals[ord, "tree"]
+fit_sorted   <- fit[ord]
+upper_sorted <- upper[ord]
+lower_sorted <- lower[ord]
+
+png(
+  filename = here::here("fig", "scatter_mintrend_vs_treecover_SEband.png"),
+  width = 2000, height = 1500, res = 200
+)
+
+plot(vals[, "tree"], vals[, "trend"],
+     xlab = "Tree cover change (2000–2024)",
+     ylab = "TWS amplitude min-trend (yearly)",
+     main = "TWS min-trend vs. Tree cover change (Standardfehlerband)")
+
+polygon(
+  x = c(tree_sorted, rev(tree_sorted)),
+  y = c(lower_sorted, rev(upper_sorted)),
+  col = adjustcolor("red", alpha.f = 0.2),
+  border = NA
+)
+
+lines(tree_sorted, fit_sorted, col = "red", lwd = 2)
+
+text(
+  x = par("usr")[1] + 0.02 * diff(par("usr")[1:2]),
+  y = par("usr")[4] - 0.02 * diff(par("usr")[3:4]),
+  labels = sprintf(
+    "Pearson r = %.3f\nSlope = %.3f\np-value = %.3g\nR² = %.3f",
+    correlation_result,
+    lm_sum$coefficients["tree", "Estimate"],
+    lm_sum$coefficients["tree", "Pr(>|t|)"],
+    lm_sum$r.squared
+  ),
+  adj = c(0, 1), cex = 1.2
+)
+
+dev.off()
+
+```
+
