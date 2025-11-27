@@ -75,60 +75,30 @@ ggsave(
 
 ```{r}
 tws <- nc_open(file_path)
-
-structure(tws)
-
 time_vals <- ncvar_get(tws, "time")
-
 time_units <- ncatt_get(tws, "time", "units")$value
 calendar <- ncatt_get(tws, "time", "calendar")$value
-
-time_units
-calendar
-head(time_vals)
-
 origin <- as.POSIXct("2002-04-18 00:00:00", tz = "UTC")
-
 time_dates <- origin + time_vals * 86400  # 86400 Sekunden pro Tag
-
-head(time_dates)
-tail(time_dates)
-
 start_date1 <- as.POSIXct("2003-03-01", tz = "UTC")
 end_date1   <- as.POSIXct("2004-03-31", tz = "UTC")
-
 sel_idx1 <- which(time_dates >= start_date1 & time_dates <= end_date1)
-
 time_dates[sel_idx1]
-
 start_date2 <- as.POSIXct("2024-03-01", tz = "UTC")
 end_date2   <- as.POSIXct("2025-03-31", tz = "UTC")
-
 sel_idx2 <- which(time_dates >= start_date2 & time_dates <= end_date2)
-
 time_dates[sel_idx2]
-
 tws_rast <- rast(file_path)
-
 tws1 <- tws_rast[[sel_idx1]]
-
 time(tws1) <- time_dates[sel_idx1]
-
-tws1
-
 tws2 <- tws_rast[[sel_idx2]]
-
 time(tws2) <- time_dates[sel_idx2]
 
-tws2
-
 tws1_mean <- mean(tws1, na.rm = TRUE)
-
-plot(tws1_mean, main = "Mean TWS (Mar 2003 – Mar 2004)")
+# plot(tws1_mean, main = "Mean TWS (Mar 2003 – Mar 2004)")
 
 tws2_mean <- mean(tws2, na.rm = TRUE)
-
-plot(tws2_mean, main = "Mean TWS (Mar 2024 – Mar 2025)")
+#plot(tws2_mean, main = "Mean TWS (Mar 2024 – Mar 2025)")
 
 tws1_mean_180 <- terra::rotate(tws1_mean)
 tws2_mean_180 <- terra::rotate(tws2_mean)
@@ -142,11 +112,11 @@ tws1_aoi <- mask(crop(tws1_mean_180, polygon_vect), polygon_vect)
 tws2_aoi <- mask(crop(tws2_mean_180, polygon_vect), polygon_vect)
 
 # Plotten
-plot(tws1_aoi, main = "Mean TWS (Mar 2003 – Mar 2004) – AOI", col = viridis::viridis(100))
-plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+#plot(tws1_aoi, main = "Mean TWS (Mar 2003 – Mar 2004) – AOI", col = viridis::viridis(100))
+#plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
-plot(tws2_aoi, main = "Mean TWS (Mar 2024 – Mar 2025) – AOI", col = viridis::viridis(100))
-plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+#plot(tws2_aoi, main = "Mean TWS (Mar 2024 – Mar 2025) – AOI", col = viridis::viridis(100))
+#plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
 
 # Zeitreihe erstellen für Amplitude
