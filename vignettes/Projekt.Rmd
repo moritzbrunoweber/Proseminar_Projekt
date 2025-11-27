@@ -172,20 +172,6 @@ plot(trend_aoi, main = "Trend der Jahres-Amplitude (Steigung pro Jahr)",
      col = viridis::viridis(100))
 plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
 
-png(
-  filename = here::here("fig", "trend_tws.png"),
-  width = 2000,
-  height = 1500,
-  res = 300
-)
-
-plot(
-  trend_aoi,
-  main = "Yearly Trend in change of TWS Amplitude"
-)
-
-dev.off()
-
 # Zeitreihe erstellen für Maxima/Minima
 
 years <- format(time(tws_rast), "%Y")
@@ -236,8 +222,69 @@ min_trend  <- app(annual_min, pixel_lm_trend)
 max_trend_aoi <- mask(crop(max_trend, polygon_vect), polygon_vect)
 min_trend_aoi <- mask(crop(min_trend, polygon_vect), polygon_vect)
 
-plot(max_trend_aoi, main = "Trend der jährlichen Maxima", col = viridis::viridis(100))
-plot(min_trend_aoi, main = "Trend der jährlichen Minima", col = viridis::viridis(100))
+#richtig plotten und speichern
+
+make_diverging_cols <- function(r, n = 101) {
+  # Symmetrisch um 0
+  zlim <- max(abs(range(values(r), na.rm = TRUE)))
+  
+  # Braun – Weiß – Blau
+  pal <- colorRampPalette(c("brown", "white", "blue"))(n)
+  
+  list(
+    col = pal,
+    range = c(-zlim, zlim)
+  )
+}
+
+cols_trend <- make_diverging_cols(trend_aoi)
+
+plot(trend_aoi,
+     main = "Trend der Jahres-Amplitude (Steigung/Jahr)",
+     col = cols_trend$col,
+     range = cols_trend$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+cols_max <- make_diverging_cols(max_trend_aoi)
+
+plot(max_trend_aoi,
+     main = "Trend der jährlichen Maxima (Steigung/Jahr)",
+     col = cols_max$col,
+     range = cols_max$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+cols_min <- make_diverging_cols(min_trend_aoi)
+
+plot(min_trend_aoi,
+     main = "Trend der jährlichen Minima (Steigung/Jahr)",
+     col = cols_min$col,
+     range = cols_min$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+
+png(here::here("fig", "max_trend_tws.png"), width=2000, height=1500, res=300)
+plot(max_trend_aoi,
+     main = "Trend der jährlichen TWS Maxima",
+     col = cols_max$col,
+     range = cols_max$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+dev.off()
+
+png(here::here("fig", "min_trend_tws.png"), width=2000, height=1500, res=300)
+plot(min_trend_aoi,
+     main = "Trend der jährlichen TWS Minima",
+     col = cols_min$col,
+     range = cols_min$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+dev.off()
+
+png(here::here("fig", "trend_tws.png"), width=2000, height=1500, res=300)
+plot(trend_aoi,
+     main = "Yearly Trend in change of TWS Amplitude",
+     col = cols_trend$col,
+     range = cols_trend$range)
+plot(st_geometry(polygon_sf), add = TRUE, border = "red", lwd = 2)
+dev.off()
+
 ```
 
 ## Data processing tree cover
