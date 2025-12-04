@@ -1,13 +1,4 @@
----
-title: "How Changes in Tree Cover in the Amazon Rain Forest correlate with a Change in Terrestrial Water Storage"
-author: "Moritz Weber"
-date: "18 Dezember 2025"
-output: html_document
----
-
-```{r}
 library(ncdf4)
-library(purrr)
 library(terra)
 library(here)
 library(ggplot2)
@@ -15,16 +6,12 @@ library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(dplyr)
+
 # define file paths
 file_path <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/GRAVIS-3_COSTG_0200_TWS_GRID_GFZ_0001.nc"    #insert path to tws-data
 file_path_m1 <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/tree_cover_new/2000"    #insert file path to folder containing tree cover data for the period 2000-2001
 file_path_m2 <- "C:/Users/Moritz.weber/Desktop/lokale Dateien/Uni/HS2025/Proseminar_Applied_Geodata_Science/data_external/tree_cover_new/2024"    #insert file path to folder containing tree cover data for the period 2024-2025
-```
 
-## Introduction
-The Amazon rain forest plays a vital role in the earth's climate system and global water cycle. It acts as a big carbon sink and contributes significantly to regional and global precipitation patterns through evapotranspiration. However, widespread deforestation driven by agriculture, logging, and urbanization threaten the Amazon rain forest. Changes in forest cover can disrupt water storage and availability, affecting surface water, soil moisture, and groundwater dynamics. By analyzing terrestrial water storage anomalies from GRACE/GRACE-FO data in relation to deforestation areas, I want to see if there is a quantifiable correlation between the two. In order to get a most complete picture of the situation, a relatively large area of interest is chosen: 
-
-```{r}
 coords <- matrix(c(
   -77.0000000,  6.0000000,   
   -48.0000000,  6.0000000,   
@@ -64,19 +51,9 @@ ggsave(
   height = 6,
   dpi = 300
 )
-```
 
-## Methods and Data
-There are two data sets being used for this project, the first one being "COST-G GravIS RL02 Terrestrial Water Storage Anomalies". The GRACE-FO satellites, which have been in orbit since 2002, gather data about earth's gravitational anomalies. In this specific data set, the collected data is processed to terrestrial water storage anomalies relative to the long term mean of April 2002 - March 2020, provided in cm of equivalent water height at a rather big pixel size of 1° latitude/longitude and a monthly temporal resolution. The second data set is the tree cover product, provided by MODIS/Terra Vegetation. Its pixel size is very small with 250 by 250 meters and it has a yearly temporal resolution.
-The aim of this project is to relate the change in the yearly amplitude of terrestrial water storage anomaly for the longest possible period, April 2002 - May 2025, to the change in tree cover from the measuring period March 2000 - March 2001 to the measuring period March 2024 - March 2025.
-The hypothesis which is being researched is for areas with declined tree cover, the trend in the amplitude of TWS storage will decline, as there is less vegetation surface for evapotranspiration to take place, lowering the maximum water storage.
-2. Methods and Data: Describes the data (scale, source, etc.) and the methods.
-3. Results: Reports the results in a logical order that facilitates reading - from the general pattern to the details. Basic and central finding first, then the nuance.
-4. Discussion: Explain what the results mean in relation to the question stated in the Introduction. Discuss caveats, compare to earlier findings, and explain the relevance of your results.
+#TWS
 
-## Data Processing TWS
-
-```{r}
 tws <- nc_open(file_path)
 time_vals <- ncvar_get(tws, "time")
 time_units <- ncatt_get(tws, "time", "units")$value
@@ -145,7 +122,7 @@ plot(annual_amp_aoi)
 t <- as.numeric(format(time(annual_amp), "%Y"))
 pixel_lm <- function(y) {
   if (all(is.na(y))) return(NA)
-
+  
   model <- lm(y ~ t)
   return(coef(model)[2])  # Steigung = Trend pro Jahr
 }
@@ -335,21 +312,17 @@ plot(rivers_v, add = TRUE, col = "lightblue", lwd = 0.4)
 
 dev.off()
 
-```
-
-## Data processing tree cover
-
-```{r}
+# TREE COVER
 
 process_MOD44B_treecover <- function(hdf_folder, aoi, output_file) {
   hdf_files <- list.files(hdf_folder, pattern = "\\.hdf$", full.names = TRUE)
   if(length(hdf_files) == 0) stop("Keine HDF-Dateien im Ordner gefunden!")
-
+  
   tree_rasters <- lapply(hdf_files, function(f) {
     sds_path <- sprintf('HDF4_EOS:EOS_GRID:"%s":MOD44B_250m_GRID:Percent_Tree_Cover', f)
     rast(sds_path)
   })
-
+  
   mosaic_tree <- do.call(mosaic, tree_rasters)
   
   if (!identical(crs(mosaic_tree), crs(aoi))) {
@@ -360,7 +333,7 @@ process_MOD44B_treecover <- function(hdf_folder, aoi, output_file) {
   tree_masked <- mask(tree_crop, aoi)
   
   plot(tree_masked, main = paste("MOD44B Tree Cover -", output_file))
- # writeRaster(tree_masked, output_file, overwrite = TRUE)
+  # writeRaster(tree_masked, output_file, overwrite = TRUE)
   
   return(tree_masked)
 }
@@ -430,10 +403,6 @@ plot(lakes_v, add = TRUE, col = "lightblue", border = "lightblue")
 plot(rivers_v, add = TRUE, col = "lightblue", lwd = 0.4)
 
 dev.off()
-```
-## Correlation tree cover change & change in yearly TWS amplitude
-
-```{r}
 
 # Korrelation
 
@@ -569,10 +538,6 @@ text(
 
 dev.off()
 
-```
-## Correlation tree cover change & change in yearly maxima/minima of TWS amplitude
-
-```{r}
 # Korrelation max/min
 
 trend_map  <- max_trend_aoi
@@ -839,6 +804,3 @@ text(
 )
 
 dev.off()
-
-```
-
