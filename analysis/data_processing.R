@@ -350,6 +350,40 @@ tree_cover_change <- tree_2024 - tree_2000
 
 # plot(tree_cover_change, main = "tree_cover_change")
 
+crs_deg <- "EPSG:4326"
+
+tree_change_deg <- project(tree_cover_change, crs_deg)
+
+land_v_deg      <- project(land_v2,      crs_deg)
+countries_v_deg <- project(countries_v2, crs_deg)
+lakes_v_deg     <- project(lakes_v2,     crs_deg)
+rivers_v_deg    <- project(rivers_v2,    crs_deg)
+cols_tcc_deg <- make_diverging_cols_yellow_green(tree_change_deg)
+
+png(
+  filename = here::here("fig", "tree_cover_change_original.png"),
+  width = 2000,
+  height = 1500,
+  res = 300
+)
+
+plot(
+  tree_change_deg,
+  main = "Tree Cover Change (original)",
+  col  = adjustcolor(cols_tcc_deg$col, alpha.f = 0.85),
+  zlim = cols_tcc_deg$range,
+  legend = TRUE,
+  axes = TRUE,
+  box  = TRUE
+)
+
+plot(land_v_deg,      add = TRUE, border = "black",   lwd = 1.2)
+plot(countries_v_deg, add = TRUE, border = "grey20",  lwd = 0.5)
+plot(lakes_v_deg,     add = TRUE, col = "lightblue",  border = "lightblue")
+plot(rivers_v_deg,    add = TRUE, col = "lightblue",  lwd = 0.4)
+
+dev.off()
+
 # adapt spatial resolution
 tree_cover_change <- project(tree_cover_change, tws1_aoi)
 
