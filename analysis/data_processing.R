@@ -1,4 +1,5 @@
 library(ncdf4)
+library(purrr)
 library(terra)
 library(here)
 library(ggplot2)
@@ -354,11 +355,73 @@ crs_deg <- "EPSG:4326"
 
 tree_change_deg <- project(tree_cover_change, crs_deg)
 
-land_v_deg      <- project(land_v2,      crs_deg)
-countries_v_deg <- project(countries_v2, crs_deg)
-lakes_v_deg     <- project(lakes_v2,     crs_deg)
-rivers_v_deg    <- project(rivers_v2,    crs_deg)
-cols_tcc_deg <- make_diverging_cols_yellow_green(tree_change_deg)
+make_treecover_cols <- function(r, n = 101) {
+  pal <- colorRampPalette(c("white", "#90EE90", "#006400"))(n)
+  
+  list(
+    col = pal,
+    range = c(0, 100)  # Tree cover ist in Prozent 0–100
+  )
+}
+
+land_v_deg      <- project(land_v,      crs_deg)
+countries_v_deg <- project(countries_v, crs_deg)
+lakes_v_deg     <- project(lakes_v,     crs_deg)
+rivers_v_deg    <- project(rivers_v,    crs_deg)
+cols_tcc <- make_treecover_cols(tree_2000_deg)
+
+tree_2000_deg <- project(tree_2000, crs_deg)
+
+png(
+  filename = here::here("fig", "tree_cover_2000.png"),
+  width = 2000,
+  height = 1500,
+  res = 300
+)
+
+plot(
+  tree_2000_deg,
+  main = "Tree Cover 2000",
+  col  = adjustcolor(cols_tcc$col, alpha.f = 0.85),
+  zlim = cols_tcc$range,
+  legend = TRUE,
+  axes = TRUE,
+  box  = TRUE
+)
+
+plot(land_v_deg,      add = TRUE, border = "black",   lwd = 1.2)
+plot(countries_v_deg, add = TRUE, border = "grey20",  lwd = 0.5)
+plot(lakes_v_deg,     add = TRUE, col = "lightblue",  border = "lightblue")
+plot(rivers_v_deg,    add = TRUE, col = "lightblue",  lwd = 0.4)
+
+dev.off()
+
+
+tree_2024_deg <- project(tree_2024, crs_deg)
+
+png(
+  filename = here::here("fig", "tree_cover_2024.png"),
+  width = 2000,
+  height = 1500,
+  res = 300
+)
+
+plot(
+  tree_2024_deg,
+  main = "Tree Cover 2024",
+  col  = adjustcolor(cols_tcc$col, alpha.f = 0.85),
+  zlim = cols_tcc$range,
+  legend = TRUE,
+  axes = TRUE,
+  box  = TRUE
+)
+
+plot(land_v_deg,      add = TRUE, border = "black",   lwd = 1.2)
+plot(countries_v_deg, add = TRUE, border = "grey20",  lwd = 0.5)
+plot(lakes_v_deg,     add = TRUE, col = "lightblue",  border = "lightblue")
+plot(rivers_v_deg,    add = TRUE, col = "lightblue",  lwd = 0.4)
+
+dev.off()
 
 png(
   filename = here::here("fig", "tree_cover_change_original.png"),

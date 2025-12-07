@@ -33,7 +33,7 @@ The second data set is the tree cover product, provided by MODIS/Terra Vegetatio
 The aim of this project is to relate the change in the yearly amplitude of terrestrial water storage anomaly for the longest possible period, April 2002 - May 2025, to the change in tree cover from the measuring period March 2000 - March 2001 to the measuring period March 2024 - March 2025.
 The hypothesis which is being researched is as follows: for areas with declined tree cover, the trend in the amplitude of TWS storage will decline, as there is less vegetation surface for evapotranspiration to take place, lowering the maximum water storage - similar to the well known principle "Schwammstadt" in urban geography.
 
-In order to do this,
+The first part of data processing concerns the change in tree cover. From the downloaded .hdf files, which include multiple layers with vegetation related data, the layers containing the tree cover data need to be extracted, mosaiced together and then masked with the area of interest. 
 
 3. Results: Reports the results in a logical order that facilitates reading - from the general pattern to the details. Basic and central finding first, then the nuance.
 4. Discussion: Explain what the results mean in relation to the question stated in the Introduction. Discuss caveats, compare to earlier findings, and explain the relevance of your results.
