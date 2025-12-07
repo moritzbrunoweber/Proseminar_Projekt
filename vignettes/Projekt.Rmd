@@ -6,15 +6,7 @@ output: html_document
 ---
 
 ```{r message=FALSE, warning=FALSE}
-library(ncdf4)
-library(purrr)
-library(terra)
 library(here)
-library(ggplot2)
-library(sf)
-library(rnaturalearth)
-library(rnaturalearthdata)
-library(dplyr)
 ```
 
 ## Introduction
