@@ -68,6 +68,38 @@ knitr::include_graphics(
 )
 ```
 
+## Results
+For statistical analysis a simple linear regression was chosen. It relates the average yearly change in terrestrial water storage over a 23 year period to the absolute change in tree covered area which happened over a period of 24 years.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "scatter_trend_vs_treecover_SEband.png")
+)
+```
+
+The pearson r = 0.318 suggests a low to moderate positive correlation, which, with a p-value of 3.42e-16, is highly significant. The low value for R squared indicates that almost 90% of the variance can not be explained by this model. The slope is very small with a value of 0.011. This means that areas which had a decrease of 10% in tree cover over the 24 year period of measurement had a yearly decline in their TWS amplitude of 1.1 millimeters, adding up to 25.3 millimeters over the TWS data's temporal range of 23 years. Important to note is the starting point of the negative TWS amplitude trend: It begins already at close to 10% tree cover change, indicating a negative trend in TWS amplitude even for areas with an increased tree cover of up to 10%. Only after this point, the trend becomes positive, indicating a higher amplitude of TWS.
+This result poses a further question: If the amplitude of TWS does indeed follow a negative trend for areas with decreased tree cover, is it because the highest values decrease, the lowest values increase, or both? In order to figure this out, the same process as before is applied - but now with the yearly maximum and the yearly minimum value of TWS, which results in a two rasters showing the trend of said minimum and maximum values.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "min_trend_tws.png")
+)
+knitr::include_graphics(
+  here("fig", "max_trend_tws.png")
+)
+```
+
+Now, the same statistical analysis is carried out.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "scatter_mintrend_vs_treecover_SEband.png")
+)
+knitr::include_graphics(
+  here("fig", "scatter_maxtrend_vs_treecover_SEband.png")
+)
+```
+
 3. Results: Reports the results in a logical order that facilitates reading - from the general pattern to the details. Basic and central finding first, then the nuance.
 4. Discussion: Explain what the results mean in relation to the question stated in the Introduction. Discuss caveats, compare to earlier findings, and explain the relevance of your results.
 
