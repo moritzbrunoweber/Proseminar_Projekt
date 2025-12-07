@@ -216,7 +216,7 @@ cols_min <- make_diverging_cols(min_trend_aoi)
 
 plot(
   max_trend_aoi,
-  main = "Trend der jährlichen Maxima",
+  main = "Yearly Amplitude Maximum Trend (Change in cm of Water Height Equivalent)",
   col  = cols_max$col,
   range = cols_max$range
 )
@@ -235,7 +235,7 @@ png(
 
 plot(
   max_trend_aoi,
-  main = "Trend der jährlichen Maxima",
+  main = "Yearly Maximum Trend (cm of Water Height Equivalent)",
   col  = cols_max$col,
   range = cols_max$range
 )
@@ -249,7 +249,7 @@ dev.off()
 
 plot(
   min_trend_aoi,
-  main = "Trend der jährlichen Minima",
+  main = "Yearly Amplitude Minimum Trend (Change in cm of Water Height Equivalent)",
   col  = cols_min$col,
   range = cols_min$range
 )
@@ -268,7 +268,7 @@ png(
 
 plot(
   min_trend_aoi,
-  main = "Trend der jährlichen Minima",
+  main = "Yearly Minimum Trend (cm of Water Height Equivalent)",
   col  = cols_min$col,
   range = cols_min$range
 )
@@ -282,7 +282,7 @@ dev.off()
 
 plot(
   trend_aoi,
-  main = "Trend der Jahres-Amplitude (Steigung/Jahr)",
+  main = "Yearly Amplitude Trend (Change in cm of Water Height Equivalent)",
   col  = cols_trend$col,
   range = cols_trend$range
 )
@@ -301,7 +301,7 @@ png(
 
 plot(
   trend_aoi,
-  main = "Trend der Jahres-Amplitude (Steigung/Jahr)",
+  main = "Yearly Amplitude Trend (cm of Water Height Equivalent)",
   col  = cols_trend$col,
   range = cols_trend$range
 )

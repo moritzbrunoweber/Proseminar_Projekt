@@ -33,7 +33,40 @@ The second data set is the tree cover product, provided by MODIS/Terra Vegetatio
 The aim of this project is to relate the change in the yearly amplitude of terrestrial water storage anomaly for the longest possible period, April 2002 - May 2025, to the change in tree cover from the measuring period March 2000 - March 2001 to the measuring period March 2024 - March 2025.
 The hypothesis which is being researched is as follows: for areas with declined tree cover, the trend in the amplitude of TWS storage will decline, as there is less vegetation surface for evapotranspiration to take place, lowering the maximum water storage - similar to the well known principle "Schwammstadt" in urban geography.
 
-The first part of data processing concerns the change in tree cover. From the downloaded .hdf files, which include multiple layers with vegetation related data, the layers containing the tree cover data need to be extracted, mosaiced together and then masked with the area of interest. 
+The first part of data processing handles the GRACE-FO data on terrestrial water storage. The monthly data is grouped by years, the cut-off date being July 1st (for a clear yearly amplitude), and the yearly amplitude extracted. Now, with this time series of yearly TWS amplitudes for the period April 2002 - May 2025, for every spatial data point a linear regression is made to calculate the trend of TWS for said period. The result is a raster showing the yearly change in TWS in centimeter water height equivalent.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "trend_amplitude_tws.png")
+)
+```
+
+The second part of data processing concerns the change in tree cover. From the downloaded .hdf files, which include multiple layers with vegetation related data, the layers containing the tree cover data need to be extracted, mosaiced together and then masked with the area of interest, which results in two rasters displaying the amount of tree covered area in percent for the periods of March 2000 - March 2001 and March 2024 - March 2025.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "tree_cover_2000.png")
+)
+knitr::include_graphics(
+  here("fig", "tree_cover_2024.png")
+)
+```
+
+For further data processing and better visual understanding, the two rasters are subtracted from one another, resulting in the change in tree cover over the 24 year period, displayed in percent.
+
+```{r}
+knitr::include_graphics(
+  here("fig", "tree_cover_change_original.png")
+)
+```
+
+For statistical analysis, the tree cover change raster's spatial resolution needs to be adapted to the much lower spatial resolution of the TWS raster, which looks as follows:
+
+```{r}
+knitr::include_graphics(
+  here("fig", "tree_cover_change_resampled.png")
+)
+```
 
 3. Results: Reports the results in a logical order that facilitates reading - from the general pattern to the details. Basic and central finding first, then the nuance.
 4. Discussion: Explain what the results mean in relation to the question stated in the Introduction. Discuss caveats, compare to earlier findings, and explain the relevance of your results.
