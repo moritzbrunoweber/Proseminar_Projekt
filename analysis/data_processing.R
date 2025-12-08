@@ -381,7 +381,7 @@ png(
 
 plot(
   tree_2000_deg,
-  main = "Tree Cover 2000",
+  main = "Tree Cover 2000 (%)",
   col  = adjustcolor(cols_tcc$col, alpha.f = 0.85),
   zlim = cols_tcc$range,
   legend = TRUE,
@@ -408,7 +408,7 @@ png(
 
 plot(
   tree_2024_deg,
-  main = "Tree Cover 2024",
+  main = "Tree Cover 2024 (%)",
   col  = adjustcolor(cols_tcc$col, alpha.f = 0.85),
   zlim = cols_tcc$range,
   legend = TRUE,
@@ -444,7 +444,7 @@ cols_tcc <- make_diverging_cols_yellow_green(tree_cover_change_resampled)
 
 plot(
   tree_cover_change_resampled,
-  main = "Tree Cover Change (resampled)",
+  main = "Tree Cover Change resampled (%)",
   col  = cols_tcc$col,
   range = cols_tcc$range
 )
@@ -465,7 +465,7 @@ png(
 
 plot(
   tree_cover_change_resampled,
-  main = "Tree Cover Change (resampled)",
+  main = "Tree Cover Change resampled (%)",
   col  = cols_tcc$col,
   range = cols_tcc$range
 )
@@ -487,7 +487,7 @@ png(
 
 plot(
   tree_change_deg,
-  main = "Tree Cover Change (original)",
+  main = "Tree Cover Change original (%)",
   col  = adjustcolor(cols_tcc$col, alpha.f = 0.85),
   zlim = cols_tcc$range,
   legend = TRUE,

@@ -113,9 +113,10 @@ Second, the TWS trends combine many hydrological components — soil moisture, s
 Despite these limitations, the analysis gives a consistent picture: areas with stronger tree cover loss tend to shift toward a reduced TWS amplitude, driven mainly by a rise in minimum water storage. This suggests that deforestation modifies not only the quantity of stored water but also the seasonal dynamics of how water moves through the system. In a region as sensitive as the Amazon, such long-term shifts are relevant for understanding changing flood and drought regimes, the resilience of the ecosystem, and the feedbacks between land cover and climate.
 
 ## References
-D’Almeida, C. u. a. (2006) „Spatial Distribution of the Hydrological Impact of Deforestation in Amazonia“.
+D’Almeida, C. et al. (2006) “Spatial Distribution of the Hydrological Impact of Deforestation in Amazonia.”
 
-Lima, Letícia S. u. a. (2014) „Feedbacks between deforestation, climate, and hydrology in the Southwestern Amazon: implications for the provision of ecosystem services“, Landscape Ecology, 29(2), S. 261–274. Verfügbar unter: https://doi.org/10.1007/s10980-013-9962-1.
+Lima, Letícia S. et al. (2014) “Feedbacks between deforestation, climate, and hydrology in the Southwestern Amazon: implications for the provision of ecosystem services,” Landscape Ecology, 29(2), pp. 261–274. Available at: https://doi.org/10.1007/s10980-013-9962-1.
 
-Vergopolan, N. und Fisher, J.B. (2016) „The impact of deforestation on the hydrological cycle in Amazonia as observed from remote sensing“, International Journal of Remote Sensing, 37(22), S. 5412–5430. Verfügbar unter: https://doi.org/10.1080/01431161.2016.1232874.
+Vergopolan, N. and Fisher, J.B. (2016) “The impact of deforestation on the hydrological cycle in Amazonia as observed from remote sensing,” International Journal of Remote Sensing, 37(22), pp. 5412–5430. Available at: https://doi.org/10.1080/01431161.2016.1232874.
+
 
