@@ -49,7 +49,7 @@ For further data processing and better visual understanding, the two rasters are
 
 ```{r}
 knitr::include_graphics(
-  here("fig", "tree_cover_change_original.png")
+  here("fig", "tree_cover_change_original_deg.png")
 )
 ```
 
